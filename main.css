@@ -1,0 +1,219 @@
+/* lato-regular - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: url('./fonts/lato-v24-latin-300.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+:root{
+  --clr-dark:#2a2a2a;
+  --clr-light:#eaeaea;
+  --clr-contrast: #eeeeee;
+  --clr-footer: #aca5af;
+}
+
+*,
+*::before,
+*::after{
+  box-sizing: border-box;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  background-color: #f4f4f4;
+  color: var(--clr-dark);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 0.9rem;
+  letter-spacing: 0.2rem;
+  line-height: 1.5em;
+}
+
+a{
+  text-decoration: none;
+  color: var(--clr-dark);
+}
+
+p{
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+h2{
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 1.7rem;
+  letter-spacing: 0.3rem;
+  line-height: 1.5em;
+  padding: 1% 8%;
+}
+
+h3{
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.3rem;
+  line-height: 1.5em;
+  text-align: justify;
+}
+
+.section-box{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0.5% 8%;
+  gap: 0.4rem;
+  justify-content: flex-start;
+}
+
+/* ################################################################################# */
+
+/* NAV Bar */
+nav{
+  background-color: var(--clr-contrast);
+  padding: 1% 5%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font-size: 0.9rem;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.navbar-logo{
+  letter-spacing: 0.4rem;
+}
+
+.navbar-item{
+  display: flex;
+  gap: 0.3em;
+}
+/* ################################################################################# */
+
+.focus{
+  flex: 1 1 calc(33.333% - 1rem);
+  min-width: 250px;
+  max-width: 300px;
+  background-color: transparent;
+  padding: 0.4%;
+  border: 1px solid #2a2a2a;
+  border-radius: 5px;
+
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.focus p{
+  margin-bottom: 0rem;
+}
+
+/* ################################################################################# */
+
+/*Projects*/
+.gallery{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0.5% 8%;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.img-box{
+  flex: 1 1 calc(33.333% - 1rem);
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.img-box img {
+  width: 100%;
+  height: auto;
+}
+
+.img-banner{
+  width: 100%;
+}
+
+#viewer {
+  width: 500px;
+  height: 500px;
+}
+
+/* ################################################################################# */
+
+/* Digital independence */
+.dig-ind-box{
+  flex: 1 1 calc(33.333% - 1rem);
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dig-ind-box img{
+  filter: grayscale(100%);
+  width: auto;
+  height: 40px;
+}
+
+.dig-ind-box p{
+  text-align: center;
+  margin-bottom: 5rem;
+  margin-top: 0.5rem;
+}
+
+/* ################################################################################# */
+
+/* Section Ping me. */
+.social-icons{
+  width: 100%;
+  padding: 1rem;
+}
+
+/* ################################################################################# */
+
+/* Footer */
+footer{
+  background-color: var(--clr-light);
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footer_social{
+  display: flex;
+  max-width: 100%;
+  justify-content: center;
+}
+
+#footer_logo{
+  background-color: var(--clr-footer);
+  width: 100%;
+  align-items: center;
+}
+
+.tariffe-link {
+  background-color: #aca5af;
+  color: var(--clr-dark);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.tariffe-link:hover {
+  background-color: #9c96a0;
+  cursor: pointer;
+  opacity: 0.85;
+}
