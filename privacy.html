@@ -115,22 +115,31 @@ di aver preso atto dell'informativa ai sensi dell'art. 13 del D. Lgs. n. 196/200
       </div>
 
       <div class="section-box">
-        <h3>Compila i seguenti campi</h3>
+        <h3 style="font-size: 1.5rem;margin-top: 2rem;">Compila i seguenti campi</h3>
         <label>Nome:</label>
         <input type="text" placeholder="Inserisci il nome" />
         <label>Cognome:</label>
         <input type="text" placeholder="Inserisci il cognome" />
         <label>Codice Fiscale:</label>
         <input type="text" placeholder="Inserisci il Codice Fiscale" />
-        <label>Data:</label>
+        <div style="margin-top:1rem; width: 100%;">
+          <input type="checkbox" id="privacyCheck" />
+          <label for="privacyCheck">
+            DICHIARA - A VALERE SOLO PER TUTTO L'ANNO 2025 -<br />
+            di aver preso atto dell'informativa ai sensi dell'art. 13 del D. Lgs. n. 196/2003 "Codice in materia di protezione dei dati personali"
+          </label>
+        </div>
+        <label style="margin-top: 2rem;">Data:</label>
         <input type="text" placeholder="Inserisci data" />
         <label>Luogo:</label>
         <input type="text" placeholder="Inserisci luogo" />
         <label>Firma:</label>
         <canvas id="signature-pad" width="500" height="150" style="border:1px solid #ccc; border-radius:4px;"></canvas>
-        <button class="download-btn" onclick="clearSignature()">Cancella firma</button>
-<label style="display:block; margin-top:0.5rem;"></label>
-<input type="file" id="uploadFirma" accept="image/*" onchange="loadUploadedSignature(event)" class="download-btn" style="margin-top:0.5rem;" />
+        <div style="margin-top: 1rem;">
+          <button class="download-btn" onclick="clearSignature()">Cancella firma</button>
+          <label style="display:block; margin-top:0.5rem;"></label>
+          <input type="file" id="uploadFirma" accept="image/*" onchange="loadUploadedSignature(event)" class="download-btn" style="margin-top:0.5rem;" />
+        </div>
         <input type="hidden" id="firmaDigitale" />
       </div>
 
@@ -152,67 +161,68 @@ di aver preso atto dell'informativa ai sensi dell'art. 13 del D. Lgs. n. 196/200
       <div style="margin-top: 2rem;"><p style="font-size: 0.8rem">twenty25 # Milano</p></div>
     </footer>
 
-    <script>
-      function downloadPDF() {
-        const element = document.getElementById("pdf-content");
-        html2pdf().from(element).save("Informativa_Privacy_2025.pdf");
-      }
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script>
-        async function downloadPDF() {
-          const nome = document.querySelector('input[placeholder="Inserisci il nome"]').value;
-          const cognome = document.querySelector('input[placeholder="Inserisci il cognome"]').value;
-          const cf = document.querySelector('input[placeholder="Inserisci il Codice Fiscale"]').value;
-          const data = document.querySelector('input[placeholder="Inserisci data"]').value;
-          const luogo = document.querySelector('input[placeholder="Inserisci luogo"]').value;
-          const firmaCanvas = document.getElementById("signature-pad");
-          const firmaUpload = document.getElementById("uploadFirma");
-  
-          const formUrl = '/2025_INF_PRIVACY.pdf';
-          const existingPdfBytes = await fetch(formUrl).then(res => res.arrayBuffer());
-  
-          const { PDFDocument, StandardFonts, rgb } = PDFLib;
-          const pdfDoc = await PDFDocument.load(existingPdfBytes);
-          const pages = pdfDoc.getPages();
-          const targetPage = pages[2];
-          const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  
-          const fontSize = 11;
-  
-          targetPage.drawText(nome, { x: 210, y: 475, size: fontSize, font });
-          targetPage.drawText(cognome, { x: 400, y: 475, size: fontSize, font });
-          targetPage.drawText(cf, { x: 280, y: 440, size: fontSize, font });
-          targetPage.drawText(data, { x: 130, y: 280, size: fontSize, font });
-          targetPage.drawText(luogo, { x: 210, y: 280, size: fontSize, font });
-  
-          let firmaImage;
-          if (firmaUpload.files.length > 0) {
-            const uploadBytes = await firmaUpload.files[0].arrayBuffer();
-            firmaImage = await pdfDoc.embedPng(uploadBytes);
-          } else {
-            const firmaImgData = firmaCanvas.toDataURL("image/png");
-            const firmaBytes = await fetch(firmaImgData).then(res => res.arrayBuffer());
-            firmaImage = await pdfDoc.embedPng(firmaBytes);
-          }
-          const firmaDims = firmaImage.scale(0.4);
-  
-          targetPage.drawImage(firmaImage, {
-            x: 280,
-            y: 150,
-            width: firmaDims.width,
-            height: firmaDims.height
-          });
-  
-          const pdfBytes = await pdfDoc.save();
-  
-          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = 'Informativa_Privacy_Compilata.pdf';
-          link.click();
-        }
-      </script>
+  async function downloadPDF() {
+    const isChecked = document.getElementById("privacyCheck").checked;
+    if (!isChecked) {
+      alert("Devi accettare l'informativa sulla privacy per scaricare il PDF.");
+      return;
+    }
+
+    const nome = document.querySelector('input[placeholder="Inserisci il nome"]').value;
+    const cognome = document.querySelector('input[placeholder="Inserisci il cognome"]').value;
+    const cf = document.querySelector('input[placeholder="Inserisci il Codice Fiscale"]').value;
+    const data = document.querySelector('input[placeholder="Inserisci data"]').value;
+    const luogo = document.querySelector('input[placeholder="Inserisci luogo"]').value;
+    const firmaCanvas = document.getElementById("signature-pad");
+    const firmaUpload = document.getElementById("uploadFirma");
+
+    const formUrl = '/2025_INF_PRIVACY.pdf';
+    const existingPdfBytes = await fetch(formUrl).then(res => res.arrayBuffer());
+
+    const { PDFDocument, StandardFonts, rgb } = PDFLib;
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    const pages = pdfDoc.getPages();
+    const targetPage = pages[2];
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    const fontSize = 11;
+
+    targetPage.drawText(nome, { x: 210, y: 475, size: fontSize, font });
+    targetPage.drawText(cognome, { x: 400, y: 475, size: fontSize, font });
+    targetPage.drawText(cf, { x: 280, y: 440, size: fontSize, font });
+    targetPage.drawText(data, { x: 130, y: 280, size: fontSize, font });
+    targetPage.drawText(luogo, { x: 210, y: 280, size: fontSize, font });
+
+    let firmaImage;
+    if (firmaUpload.files.length > 0) {
+      const uploadBytes = await firmaUpload.files[0].arrayBuffer();
+      firmaImage = await pdfDoc.embedPng(uploadBytes);
+    } else {
+      const firmaImgData = firmaCanvas.toDataURL("image/png");
+      const firmaBytes = await fetch(firmaImgData).then(res => res.arrayBuffer());
+      firmaImage = await pdfDoc.embedPng(firmaBytes);
+    }
+    const firmaDims = firmaImage.scale(0.4);
+
+    targetPage.drawImage(firmaImage, {
+      x: 280,
+      y: 150,
+      width: firmaDims.width,
+      height: firmaDims.height
+    });
+
+    const pdfBytes = await pdfDoc.save();
+
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Informativa_Privacy_Compilata.pdf';
+    link.click();
+  }
+</script>
+
   
     <script>
         const canvas = document.getElementById("signature-pad");
@@ -260,6 +270,26 @@ di aver preso atto dell'informativa ai sensi dell'art. 13 del D. Lgs. n. 196/200
           ctx.beginPath();
           document.getElementById("firmaDigitale").value = "";
         }
-      </script>     
+      </script>
+      <script>
+        function loadUploadedSignature(event) {
+          const file = event.target.files[0];
+          if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const img = new Image();
+              img.onload = function () {
+                const canvas = document.getElementById('signature-pad');
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              };
+              img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      </script>
+         
   </body>
 </html>
