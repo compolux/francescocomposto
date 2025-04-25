@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="./main.css" />
+    <title>Autocertificazione</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <style>
+      input[type="text"], input[type="date"] {
+        width: 100%;
+        padding: 0.5em;
+        margin: 0.5em 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: 'Lato', sans-serif;
+      }
+      .download-btn {
+        padding: 0.5em 1em;
+        background-color: var(--clr-footer);
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 1rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      th, td {
+        border: 1px solid #ccc;
+        padding: 0.5em;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="navbar-logo">
+        <a href="/">caf composto milano</a>
+      </div>
+      <div class="navbar-item">
+        <img style="padding-top: 0.2em; width: 1em" src="./graphics/resources/dot.svg" alt="dot" />
+        <a href="#contact">contatti</a>
+      </div>
+    </nav>
+
+    <section style="margin-top: 6rem; padding: 0 8%;" id="pdf-content">
+      <h2>Dichiarazione Sostitutiva di Certificazione</h2>
+      <div class="section-box">
+        <label>Nome e Cognome:</label><input id="nome" type="text" />
+        <label>Cittadinanza:</label><input id="cittadinanza" type="text" />
+        <label>Luogo di nascita:</label><input id="luogo_nascita" type="text" />
+        <label>Data di nascita:</label><input id="data_nascita" type="date" />
+        <label>Residenza:</label><input id="residenza" type="text" />
+        <label>Via:</label><input id="via" type="text" />
+        <label>Numero civico:</label><input id="numero" type="text" />
+        <label>Luogo e data:</label><input id="luogo_data" type="text" />
+        <p>Firma:</p>
+        <canvas id="signature-pad" width="500" height="150" style="border:1px solid #ccc;"></canvas>
+        <button class="download-btn" onclick="clearSignature()">Cancella firma</button>
+      </div>
+
+        <p>è consapevole che in caso di dichiarazione mendace sarà punito ai sensi del Codice Penale secondo quanto prescritto dall'art. 76 del succitato D.P.R. 445/2000 e che, inoltre, qualora dal controllo effettuato emerga la non veridicità del contenuto di taluna delle dichiarazioni rese, decadrà dai benefici conseguenti al provvedimento eventualmente emanato sulla base della dichiarazione non veritiera (art. 75 D.P.R. 445/2000).</p>
+
+        <p>E' informato ed autorizza la raccolta dei dati per l'emanazione dei provvedimenti amministrativi ai sensi dell’art. 10 della L. 675/96.</p>
+
+        <h3>DICHIARA</h3>
+        <p>Che, in DATA ODIERNA, il suo stato di famiglia è composto come risulta dal seguente prospetto ed è UGUALE a quello che è già stato dichiarato al Comune di residenza:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>nr.</th>
+              <th>cognome e nome</th>
+              <th>cittadinanza</th>
+              <th>luogo di nascita</th>
+              <th>data nascita</th>
+              <th>rapporto parentela</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="date" /></td><td><input type="text" /></td></tr>
+            <tr><td>2</td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="date" /></td><td><input type="text" /></td></tr>
+            <tr><td>3</td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="date" /></td><td><input type="text" /></td></tr>
+            <tr><td>4</td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="date" /></td><td><input type="text" /></td></tr>
+            <tr><td>5</td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="date" /></td><td><input type="text" /></td></tr>
+            <tr><td>6</td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="date" /></td><td><input type="text" /></td></tr>
+            <tr><td>7</td><td><input type="text" /></td><td><input type="text" /></td><td><input type="text" /></td><td><input type="date" /></td><td><input type="text" /></td></tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top: 2rem;">
+          Esente da imposta di bollo ai sensi dell'art. 37 D.P.R. 445/2000<br />
+          La presente dichiarazione ha validità per 6 mesi (art. 41 D.P.R. 445/2000);<br />
+          se i documenti che sostituisce hanno validità maggiore ha la stessa validità di essi.<br />
+          Tale dichiarazione può essere trasmessa via fax o con strumenti telematici (art. 38 D.P.R. 445/2000).<br />
+          La mancata accettazione della presente dichiarazione costituisce violazione dei doveri d'ufficio (art.74 comma 1 D.P.R. 445/2000).
+        </p>
+      </div>
+
+      <button class="download-btn" onclick="generatePDF()">Scarica il PDF</button>
+    </section>
+
+    <footer id="contact">
+      <div style="margin-top: 1.5rem;"><h2>Contatti</h2></div>
+      <div class="section-box" style="text-align: center; margin-bottom: 0.5rem;">
+        <img style="margin-bottom: 1rem; width: 1.5em" src="./graphics/resources/dot.svg" alt="dot" />
+        <p>mail: composto.servizicaf [at] gmail {dot} com</p>
+      </div>
+      <div class="section-box" style="text-align: center; margin-bottom: 0.5rem;">
+        <img style="margin-bottom: 1rem; width: 1.5em" src="./graphics/resources/dot.svg" alt="dot" />
+        <p>mobile: +39 335 61 68 758</p>
+      </div>
+    </footer>
+    <footer id="footer_logo">
+      <div style="margin-top: 2rem;"><p style="font-size: 0.8rem">twenty25 # Milano</p></div>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById("signature-pad");
+        const ctx = canvas.getContext("2d");
+        let drawing = false;
+      
+        canvas.addEventListener("mousedown", () => drawing = true);
+        canvas.addEventListener("mouseup", () => { drawing = false; ctx.beginPath(); });
+        canvas.addEventListener("mousemove", draw);
+        canvas.addEventListener("touchstart", () => drawing = true);
+        canvas.addEventListener("touchend", () => { drawing = false; ctx.beginPath(); });
+        canvas.addEventListener("touchmove", draw);
+      
+        function draw(e) {
+          if (!drawing) return;
+          const rect = canvas.getBoundingClientRect();
+          const x = (e.clientX || e.touches[0].clientX) - rect.left;
+          const y = (e.clientY || e.touches[0].clientY) - rect.top;
+          ctx.lineWidth = 2;
+          ctx.lineCap = "round";
+          ctx.strokeStyle = "black";
+          ctx.lineTo(x, y);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+        }
+      
+        function clearSignature() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.beginPath();
+        }
+      
+        async function generatePDF() {
+          const existingPdfBytes = await fetch("/2025_AUTOCERTIFICAZIONE.pdf").then(res => res.arrayBuffer());
+          const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+          const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+      
+          const pages = pdfDoc.getPages();
+          if (pages.length > 1) pdfDoc.removePage(0);
+          const page = pages[0];
+      
+          const draw = (text, x, y) => page.drawText(text || '', { x, y, size: 10, font });
+      
+          // Dati principali
+          draw(document.getElementById("nome").value, 150, 710);
+          draw(document.getElementById("cittadinanza").value, 410, 710);
+          draw(document.getElementById("luogo_nascita").value, 110, 687);
+          draw(document.getElementById("data_nascita").value, 350, 687);
+          draw(document.getElementById("residenza").value, 120, 663);
+          draw(document.getElementById("via").value, 330, 663);
+          draw(document.getElementById("numero").value, 470, 663);
+          draw(document.getElementById("luogo_data").value, 150, 200);
+      
+          // Firma
+          const signatureUrl = canvas.toDataURL("image/png");
+          const signatureImageBytes = await fetch(signatureUrl).then(res => res.arrayBuffer());
+          const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
+          const signatureDims = signatureImage.scale(0.5);
+          page.drawImage(signatureImage, {
+            x: 300,
+            y: 220,
+            width: signatureDims.width,
+            height: signatureDims.height
+          });
+      
+          // Dati della tabella: riga per riga
+          const rows = document.querySelectorAll("tbody tr");
+          const startY = 465;
+          const rowHeight = 22;
+      
+          rows.forEach((row, i) => {
+            const inputs = row.querySelectorAll("input");
+            const y = startY - i * rowHeight;
+            draw(inputs[0].value, 80, y);    // Cognome e Nome
+            draw(inputs[1].value, 240, y);   // Cittadinanza
+            draw(inputs[2].value, 300, y);   // Luogo nascita
+            draw(inputs[3].value, 390, y);   // Data nascita
+            draw(inputs[4].value, 470, y);   // Parentela
+          });
+      
+          // Salva e scarica
+          const pdfBytes = await pdfDoc.save();
+          const blob = new Blob([pdfBytes], { type: "application/pdf" });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = "Autocertificazione_Compilata.pdf";
+          link.click();
+        }
+      </script>
+      
+  </body>
+</html>
