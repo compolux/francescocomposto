@@ -266,7 +266,7 @@
           if (pages.length > 1) pdfDoc.removePage(0);
           const page = pages[0];
       
-          const drawMain = (text, x, y) => page.drawText(text || '', { x, y, size: 10, font });
+          const drawMain = (text, x, y) => page.drawText(text || '', { x, y, size: 8, font });
           const drawTable = (text, x, y) => page.drawText(text || '', { x, y, size: 6, font });
 
       
@@ -274,7 +274,7 @@
             drawMain((document.getElementById("nome").value || '').toUpperCase(), 150, 710);
             drawMain((document.getElementById("cittadinanza").value || '').toUpperCase(), 410, 710);
             drawMain((document.getElementById("luogo_nascita").value || '').toUpperCase(), 110, 687);
-            drawMain((document.getElementById("data_nascita").value || '').toUpperCase(), 350, 687);
+            drawMain(formatDateIT(document.getElementById("data_nascita").value), 350, 687);
             drawMain((document.getElementById("residenza").value || '').toUpperCase(), 120, 663);
             drawMain((document.getElementById("via").value || '').toUpperCase(), 330, 663);
             drawMain((document.getElementById("numero").value || '').toUpperCase(), 470, 663);
@@ -305,7 +305,7 @@
             drawTable((inputs[0].value || '').toUpperCase(), 80, y);    // Cognome e Nome
             drawTable((inputs[1].value || '').toUpperCase(), 240, y);   // Cittadinanza
             drawTable((inputs[2].value || '').toUpperCase(), 300, y);   // Luogo nascita
-            drawTable((inputs[3].value || '').toUpperCase(), 390, y);   // Data nascita
+            drawTable(formatDateIT(inputs[3].value), 390, y);   // Data nascita
             drawTable((select.value || '').toUpperCase(), 470, y);      // Rapporto parentela
             });
       
@@ -317,6 +317,13 @@
           link.download = "Autocertificazione_Compilata.pdf";
           link.click();
         }
+
+        function formatDateIT(dateStr) {
+            if (!dateStr) return '';
+            const [year, month, day] = dateStr.split("-");
+            return `${day}/${month}/${year}`;
+            }
+
       </script>
       
   </body>
