@@ -271,14 +271,15 @@
 
       
           // Dati principali
-          draw(document.getElementById("nome").value, 150, 710);
-          draw(document.getElementById("cittadinanza").value, 410, 710);
-          draw(document.getElementById("luogo_nascita").value, 110, 687);
-          draw(document.getElementById("data_nascita").value, 350, 687);
-          draw(document.getElementById("residenza").value, 120, 663);
-          draw(document.getElementById("via").value, 330, 663);
-          draw(document.getElementById("numero").value, 470, 663);
-          draw(document.getElementById("luogo_data").value, 150, 200);
+            drawMain((document.getElementById("nome").value || '').toUpperCase(), 150, 710);
+            drawMain((document.getElementById("cittadinanza").value || '').toUpperCase(), 410, 710);
+            drawMain((document.getElementById("luogo_nascita").value || '').toUpperCase(), 110, 687);
+            drawMain((document.getElementById("data_nascita").value || '').toUpperCase(), 350, 687);
+            drawMain((document.getElementById("residenza").value || '').toUpperCase(), 120, 663);
+            drawMain((document.getElementById("via").value || '').toUpperCase(), 330, 663);
+            drawMain((document.getElementById("numero").value || '').toUpperCase(), 470, 663);
+            drawMain((document.getElementById("luogo_data").value || '').toUpperCase(), 150, 200);
+
       
           // Firma
           const signatureUrl = canvas.toDataURL("image/png");
