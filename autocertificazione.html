@@ -93,7 +93,7 @@
                 <select>
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
-                  <option value="Compagna/o">Compagna/o</option>
+                  <option value="Compagna/o">Convivente</option>
                   <option value="Figlia/o">Figlia/o</option>
                   <option value="Altro">Altro</option>
                 </select>
@@ -109,7 +109,7 @@
                 <select>
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
-                  <option value="Compagna/o">Compagna/o</option>
+                  <option value="Compagna/o">Convivente</option>
                   <option value="Figlia/o">Figlia/o</option>
                   <option value="Altro">Altro</option>
                 </select>
@@ -125,7 +125,7 @@
                 <select>
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
-                  <option value="Compagna/o">Compagna/o</option>
+                  <option value="Compagna/o">Convivente</option>
                   <option value="Figlia/o">Figlia/o</option>
                   <option value="Altro">Altro</option>
                 </select>
@@ -141,7 +141,7 @@
                 <select>
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
-                  <option value="Compagna/o">Compagna/o</option>
+                  <option value="Compagna/o">Convivente</option>
                   <option value="Figlia/o">Figlia/o</option>
                   <option value="Altro">Altro</option>
                 </select>
@@ -157,7 +157,7 @@
                 <select>
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
-                  <option value="Compagna/o">Compagna/o</option>
+                  <option value="Compagna/o">Convivente</option>
                   <option value="Figlia/o">Figlia/o</option>
                   <option value="Altro">Altro</option>
                 </select>
@@ -173,7 +173,7 @@
                 <select>
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
-                  <option value="Compagna/o">Compagna/o</option>
+                  <option value="Compagna/o">Convivente</option>
                   <option value="Figlia/o">Figlia/o</option>
                   <option value="Altro">Altro</option>
                 </select>
@@ -189,7 +189,7 @@
                 <select>
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
-                  <option value="Compagna/o">Compagna/o</option>
+                  <option value="Compagna/o">Convivente</option>
                   <option value="Figlia/o">Figlia/o</option>
                   <option value="Altro">Altro</option>
                 </select>
@@ -266,7 +266,9 @@
           if (pages.length > 1) pdfDoc.removePage(0);
           const page = pages[0];
       
-          const draw = (text, x, y) => page.drawText(text || '', { x, y, size: 10, font });
+          const drawMain = (text, x, y) => page.drawText(text || '', { x, y, size: 10, font });
+          const drawTable = (text, x, y) => page.drawText(text || '', { x, y, size: 8, font });
+
       
           // Dati principali
           draw(document.getElementById("nome").value, 150, 710);
@@ -299,11 +301,11 @@
             const inputs = row.querySelectorAll("input");
             const select = row.querySelector("select");
             const y = startY - i * rowHeight;
-            draw(inputs[0].value, 80, y);    // Cognome e Nome
-            draw(inputs[1].value, 240, y);   // Cittadinanza
-            draw(inputs[2].value, 300, y);   // Luogo nascita
-            draw(inputs[3].value, 390, y);   // Data nascita
-            draw(select.value, 470, y);     // Rapporto parentela
+            drawTable(inputs[0].value, 80, y);    // Cognome e Nome
+            drawTable(inputs[1].value, 240, y);   // Cittadinanza
+            drawTable(inputs[2].value, 300, y);   // Luogo nascita
+            drawTable(inputs[3].value, 390, y);   // Data nascita
+            drawTable(select.value, 470, y);     // Rapporto parentela
             });
       
           // Salva e scarica
