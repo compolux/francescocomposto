@@ -74,7 +74,7 @@
         <table>
           <thead>
             <tr>
-              <th>nr.</th>
+              <th>  nr.</th>
               <th>cognome e nome</th>
               <th>cittadinanza</th>
               <th>luogo di nascita</th>
@@ -86,11 +86,17 @@
             <tr>
               <td>1</td>
               <td><input type="text" /></td>
-              <td><input type="text" /></td>
+              <td>
+                <select class="cittadinanza">
+                  <option value="">-- Seleziona --</option>
+                  <option value="Italiana">Italiana</option>
+                  <option value="Estera">Estera</option>
+                </select>
+              </td>              
               <td><input type="text" /></td>
               <td><input type="date" /></td>
               <td>
-                <select>
+                <select class="parentela">
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
                   <option value="Convivente">Convivente</option>
@@ -102,11 +108,17 @@
             <tr>
               <td>2</td>
               <td><input type="text" /></td>
-              <td><input type="text" /></td>
+              <td>
+                <select class="cittadinanza">
+                  <option value="">-- Seleziona --</option>
+                  <option value="Italiana">Italiana</option>
+                  <option value="Estera">Estera</option>
+                </select>
+              </td>              
               <td><input type="text" /></td>
               <td><input type="date" /></td>
               <td>
-                <select>
+                <select class="parentela">
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
                   <option value="Convivente">Convivente</option>
@@ -118,11 +130,17 @@
             <tr>
               <td>3</td>
               <td><input type="text" /></td>
-              <td><input type="text" /></td>
+              <td>
+                <select class="cittadinanza">
+                  <option value="">-- Seleziona --</option>
+                  <option value="Italiana">Italiana</option>
+                  <option value="Estera">Estera</option>
+                </select>
+              </td>              
               <td><input type="text" /></td>
               <td><input type="date" /></td>
               <td>
-                <select>
+                <select class="parentela">
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
                   <option value="Convivente">Convivente</option>
@@ -134,11 +152,17 @@
             <tr>
               <td>4</td>
               <td><input type="text" /></td>
-              <td><input type="text" /></td>
+              <td>
+                <select class="cittadinanza">
+                  <option value="">-- Seleziona --</option>
+                  <option value="Italiana">Italiana</option>
+                  <option value="Estera">Estera</option>
+                </select>
+              </td>              
               <td><input type="text" /></td>
               <td><input type="date" /></td>
               <td>
-                <select>
+                <select class="parentela">
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
                   <option value="Convivente">Convivente</option>
@@ -150,11 +174,17 @@
             <tr>
               <td>5</td>
               <td><input type="text" /></td>
-              <td><input type="text" /></td>
+              <td>
+                <select class="cittadinanza">
+                  <option value="">-- Seleziona --</option>
+                  <option value="Italiana">Italiana</option>
+                  <option value="Estera">Estera</option>
+                </select>
+              </td>              
               <td><input type="text" /></td>
               <td><input type="date" /></td>
               <td>
-                <select>
+                <select class="parentela">
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
                   <option value="Convivente">Convivente</option>
@@ -166,11 +196,17 @@
             <tr>
               <td>6</td>
               <td><input type="text" /></td>
-              <td><input type="text" /></td>
+              <td>
+                <select class="cittadinanza">
+                  <option value="">-- Seleziona --</option>
+                  <option value="Italiana">Italiana</option>
+                  <option value="Estera">Estera</option>
+                </select>
+              </td>              
               <td><input type="text" /></td>
               <td><input type="date" /></td>
               <td>
-                <select>
+                <select class="parentela">
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
                   <option value="Convivente">Convivente</option>
@@ -182,11 +218,17 @@
             <tr>
               <td>7</td>
               <td><input type="text" /></td>
-              <td><input type="text" /></td>
+              <td>
+                <select class="cittadinanza">
+                  <option value="">-- Seleziona --</option>
+                  <option value="Italiana">Italiana</option>
+                  <option value="Estera">Estera</option>
+                </select>
+              </td>              
               <td><input type="text" /></td>
               <td><input type="date" /></td>
               <td>
-                <select>
+                <select class="parentela">
                   <option value="">-- Seleziona --</option>
                   <option value="Coniuge">Coniuge</option>
                   <option value="Convivente">Convivente</option>
@@ -299,15 +341,18 @@
           const rowHeight = 22;
       
           rows.forEach((row, i) => {
-            const inputs = row.querySelectorAll("input");
-            const select = row.querySelector("select");
-            const y = startY - i * rowHeight;
-            drawTable((inputs[0].value || '').toUpperCase(), 80, y);    // Cognome e Nome
-            drawTable((inputs[1].value || '').toUpperCase(), 240, y);   // Cittadinanza
-            drawTable((inputs[2].value || '').toUpperCase(), 300, y);   // Luogo nascita
-            drawTable(formatDateIT(inputs[3].value), 390, y);   // Data nascita
-            drawTable((select.value || '').toUpperCase(), 470, y);      // Rapporto parentela
-            });
+  const inputs = row.querySelectorAll("input");
+  const cittadinanzaSelect = row.querySelector("select.cittadinanza");
+  const parentelaSelect = row.querySelector("select.parentela");
+  const y = startY - i * rowHeight;
+
+  drawTable((inputs[0].value || '').toUpperCase(), 80, y);    // Cognome e Nome
+  drawTable((cittadinanzaSelect.value || '').toUpperCase(), 240, y); // Cittadinanza
+  drawTable((inputs[1].value || '').toUpperCase(), 300, y);   // Luogo nascita
+  drawTable(formatDateIT(inputs[2].value), 390, y);           // Data nascita
+  drawTable((parentelaSelect.value || '').toUpperCase(), 470, y); // Rapporto parentela
+});
+
       
           // Salva e scarica
           const pdfBytes = await pdfDoc.save();
