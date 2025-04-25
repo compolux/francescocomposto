@@ -369,6 +369,31 @@
             return `${day}/${month}/${year}`;
             }
 
+            const luogoDataInput = document.getElementById('luogo_data');
+
+luogoDataInput.addEventListener('input', function () {
+  const luogo = luogoDataInput.value.split(',')[0]; // Prende solo il luogo se l'utente modifica
+  const oggi = new Date();
+  const giorno = String(oggi.getDate()).padStart(2, '0');
+  const mese = String(oggi.getMonth() + 1).padStart(2, '0');
+  const anno = oggi.getFullYear();
+  const dataOggi = `${giorno}/${mese}/${anno}`;
+  if (luogo.trim() !== '') {
+    luogoDataInput.value = `${luogo.trim()}, ${dataOggi}`;
+  }
+});
+
+luogoDataInput.addEventListener('focus', function () {
+  if (luogoDataInput.value.trim() === '') {
+    const oggi = new Date();
+    const giorno = String(oggi.getDate()).padStart(2, '0');
+    const mese = String(oggi.getMonth() + 1).padStart(2, '0');
+    const anno = oggi.getFullYear();
+    const dataOggi = `${giorno}/${mese}/${anno}`;
+    luogoDataInput.value = `, ${dataOggi}`; // Lascia spazio per il luogo
+  }
+});
+
       </script>
       
   </body>
