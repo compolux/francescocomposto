@@ -175,7 +175,7 @@ Diritto di reclamo: L'art. 77 del Regolamento Europeo, qualora l’Interessato r
     const firmaCanvas = document.getElementById("signature-pad");
     const firmaUpload = document.getElementById("uploadFirma");
 
-    const formUrl = '/2025_INF_PRIVACY.pdf';
+    const formUrl = '/2025_PRIVACY.pdf';
     const existingPdfBytes = await fetch(formUrl).then(res => res.arrayBuffer());
 
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
