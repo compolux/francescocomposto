@@ -61,7 +61,12 @@
         <label>Luogo e data:</label><input id="luogo_data" type="text" />
         <p>Firma:</p>
         <canvas id="signature-pad" width="500" height="150" style="border:1px solid #ccc;"></canvas>
-        <button class="download-btn" onclick="clearSignature()">Cancella firma</button>
+        <div style="margin-top: 1rem;">
+          <button class="download-btn" onclick="clearSignature()">Cancella firma</button>
+          <label style="display:block; margin-top:0.5rem;"></label>
+          <input type="file" id="uploadFirma" accept="image/*" onchange="loadUploadedSignature(event)" class="download-btn" style="margin-top:0.5rem;" />
+        </div>
+        <input type="hidden" id="firmaDigitale" />
       </div>
 
         <p>è consapevole che in caso di dichiarazione mendace sarà punito ai sensi del Codice Penale secondo quanto prescritto dall'art. 76 del succitato D.P.R. 445/2000 e che, inoltre, qualora dal controllo effettuato emerga la non veridicità del contenuto di taluna delle dichiarazioni rese, decadrà dai benefici conseguenti al provvedimento eventualmente emanato sulla base della dichiarazione non veritiera (art. 75 D.P.R. 445/2000).</p>
@@ -268,133 +273,144 @@
       <div style="margin-top: 2rem;"><p style="font-size: 0.8rem">twenty25 # Milano</p></div>
     </footer>
 
-    <script>
-        const canvas = document.getElementById("signature-pad");
-        const ctx = canvas.getContext("2d");
-        let drawing = false;
-      
-        canvas.addEventListener("mousedown", () => drawing = true);
-        canvas.addEventListener("mouseup", () => { drawing = false; ctx.beginPath(); });
-        canvas.addEventListener("mousemove", draw);
-        canvas.addEventListener("touchstart", () => drawing = true);
-        canvas.addEventListener("touchend", () => { drawing = false; ctx.beginPath(); });
-        canvas.addEventListener("touchmove", draw);
-      
-        function draw(e) {
-          if (!drawing) return;
-          const rect = canvas.getBoundingClientRect();
-          const x = (e.clientX || e.touches[0].clientX) - rect.left;
-          const y = (e.clientY || e.touches[0].clientY) - rect.top;
-          ctx.lineWidth = 2;
-          ctx.lineCap = "round";
-          ctx.strokeStyle = "black";
-          ctx.lineTo(x, y);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(x, y);
-        }
-      
-        function clearSignature() {
+<!-- Script -->
+<script>
+  const canvas = document.getElementById("signature-pad");
+  const ctx = canvas.getContext("2d");
+  let drawing = false;
+  
+  canvas.addEventListener("mousedown", () => drawing = true);
+  canvas.addEventListener("mouseup", () => { drawing = false; ctx.beginPath(); });
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("touchstart", () => drawing = true);
+  canvas.addEventListener("touchend", () => { drawing = false; ctx.beginPath(); });
+  canvas.addEventListener("touchmove", draw);
+  
+  document.getElementById('uploadFirma').addEventListener('change', loadUploadedSignature);
+  
+  function draw(e) {
+    if (!drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "black";
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+  
+  function clearSignature() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+  }
+  
+  function loadUploadedSignature(event) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          const ratio = img.width / img.height;
+          const maxHeight = 100;
+          let newWidth = img.width;
+          let newHeight = img.height;
+  
+          if (newHeight > maxHeight) {
+            newHeight = maxHeight;
+            newWidth = Math.round(maxHeight * ratio);
+          }
+  
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.beginPath();
-        }
-      
-        async function generatePDF() {
-          const existingPdfBytes = await fetch("/2025_AUTOCERTIFICAZIONE.pdf").then(res => res.arrayBuffer());
-          const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
-          const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
-      
-          const pages = pdfDoc.getPages();
-          if (pages.length > 1) pdfDoc.removePage(0);
-          const page = pages[0];
-      
-          const drawMain = (text, x, y) => page.drawText(text || '', { x, y, size: 8, font });
-          const drawTable = (text, x, y) => page.drawText(text || '', { x, y, size: 6, font });
-
-      
-          // Dati principali
-            drawMain((document.getElementById("nome").value || '').toUpperCase(), 150, 710);
-            drawMain((document.getElementById("cittadinanza").value || '').toUpperCase(), 410, 710);
-            drawMain((document.getElementById("luogo_nascita").value || '').toUpperCase(), 110, 687);
-            drawMain(formatDateIT(document.getElementById("data_nascita").value), 350, 687);
-            drawMain((document.getElementById("residenza").value || '').toUpperCase(), 120, 663);
-            drawMain((document.getElementById("via").value || '').toUpperCase(), 330, 663);
-            drawMain((document.getElementById("numero").value || '').toUpperCase(), 470, 663);
-            drawMain((document.getElementById("luogo_data").value || '').toUpperCase(), 150, 200);
-
-      
-          // Firma
-          const signatureUrl = canvas.toDataURL("image/png");
-          const signatureImageBytes = await fetch(signatureUrl).then(res => res.arrayBuffer());
-          const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
-          const signatureDims = signatureImage.scale(0.5);
-          page.drawImage(signatureImage, {
-            x: 300,
-            y: 220,
-            width: signatureDims.width,
-            height: signatureDims.height
-          });
-      
-          // Dati della tabella: riga per riga
-          const rows = document.querySelectorAll("tbody tr");
-          const startY = 465;
-          const rowHeight = 22;
-      
-          rows.forEach((row, i) => {
-  const inputs = row.querySelectorAll("input");
-  const cittadinanzaSelect = row.querySelector("select.cittadinanza");
-  const parentelaSelect = row.querySelector("select.parentela");
-  const y = startY - i * rowHeight;
-
-  drawTable((inputs[0].value || '').toUpperCase(), 80, y);    // Cognome e Nome
-  drawTable((cittadinanzaSelect.value || '').toUpperCase(), 240, y); // Cittadinanza
-  drawTable((inputs[1].value || '').toUpperCase(), 300, y);   // Luogo nascita
-  drawTable(formatDateIT(inputs[2].value), 390, y);           // Data nascita
-  drawTable((parentelaSelect.value || '').toUpperCase(), 470, y); // Rapporto parentela
-});
-
-      
-          // Salva e scarica
-          const pdfBytes = await pdfDoc.save();
-          const blob = new Blob([pdfBytes], { type: "application/pdf" });
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = "Autocertificazione_Compilata.pdf";
-          link.click();
-        }
-
-        function formatDateIT(dateStr) {
-            if (!dateStr) return '';
-            const [year, month, day] = dateStr.split("-");
-            return `${day}/${month}/${year}`;
-            }
-
-            const luogoDataInput = document.getElementById('luogo_data');
-
-luogoDataInput.addEventListener('input', function () {
-  const luogo = luogoDataInput.value.split(',')[0]; // Prende solo il luogo se l'utente modifica
-  const oggi = new Date();
-  const giorno = String(oggi.getDate()).padStart(2, '0');
-  const mese = String(oggi.getMonth() + 1).padStart(2, '0');
-  const anno = oggi.getFullYear();
-  const dataOggi = `${giorno}/${mese}/${anno}`;
-  if (luogo.trim() !== '') {
-    luogoDataInput.value = `${luogo.trim()}, ${dataOggi}`;
+          ctx.drawImage(img, 0, 0, newWidth, newHeight);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
   }
-});
-
-luogoDataInput.addEventListener('focus', function () {
-  if (luogoDataInput.value.trim() === '') {
-    const oggi = new Date();
-    const giorno = String(oggi.getDate()).padStart(2, '0');
-    const mese = String(oggi.getMonth() + 1).padStart(2, '0');
-    const anno = oggi.getFullYear();
-    const dataOggi = `${giorno}/${mese}/${anno}`;
-    luogoDataInput.value = `, ${dataOggi}`; // Lascia spazio per il luogo
+  
+  async function generatePDF() {
+    const existingPdfBytes = await fetch("/2025_AUTOCERTIFICAZIONE.pdf").then(res => res.arrayBuffer());
+    const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+    const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+    const page = pdfDoc.getPages()[0];
+  
+    const drawMain = (text, x, y) => page.drawText(text || '', { x, y, size: 8, font });
+    const drawTable = (text, x, y) => page.drawText(text || '', { x, y, size: 6, font });
+  
+    drawMain((document.getElementById("nome").value || '').toUpperCase(), 150, 710);
+    drawMain((document.getElementById("cittadinanza").value || '').toUpperCase(), 410, 710);
+    drawMain((document.getElementById("luogo_nascita").value || '').toUpperCase(), 110, 687);
+    drawMain(formatDateIT(document.getElementById("data_nascita").value), 350, 687);
+    drawMain((document.getElementById("residenza").value || '').toUpperCase(), 120, 663);
+    drawMain((document.getElementById("via").value || '').toUpperCase(), 330, 663);
+    drawMain((document.getElementById("numero").value || '').toUpperCase(), 470, 663);
+    drawMain((document.getElementById("luogo_data").value || '').toUpperCase(), 150, 200);
+  
+    const signatureUrl = canvas.toDataURL("image/png");
+    const signatureImageBytes = await fetch(signatureUrl).then(res => res.arrayBuffer());
+    const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
+  
+    const signatureDims = signatureImage.scale(0.5);
+    page.drawImage(signatureImage, {
+      x: 300,
+      y: 220,
+      width: signatureDims.width,
+      height: signatureDims.height
+    });
+  
+    const rows = document.querySelectorAll("tbody tr");
+    const startY = 465;
+    const rowHeight = 22;
+    rows.forEach((row, i) => {
+      const inputs = row.querySelectorAll("input");
+      const cittadinanzaSelect = row.querySelector("select.cittadinanza");
+      const parentelaSelect = row.querySelector("select.parentela");
+      const y = startY - i * rowHeight;
+  
+      drawTable((inputs[0].value || '').toUpperCase(), 80, y);
+      drawTable((cittadinanzaSelect.value || '').toUpperCase(), 240, y);
+      drawTable((inputs[1].value || '').toUpperCase(), 300, y);
+      drawTable(formatDateIT(inputs[2].value), 390, y);
+      drawTable((parentelaSelect.value || '').toUpperCase(), 470, y);
+    });
+  
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Autocertificazione_Compilata.pdf";
+    link.click();
   }
-});
-
-      </script>
-      
+  
+  function formatDateIT(dateStr) {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split("-");
+    return `${day}/${month}/${year}`;
+  }
+  </script>
+  <script> //completamento automatico data
+    window.addEventListener('DOMContentLoaded', () => {
+      const oggi = new Date();
+      const giorno = String(oggi.getDate()).padStart(2, '0');
+      const mese = String(oggi.getMonth() + 1).padStart(2, '0');
+      const anno = oggi.getFullYear();
+      const dataFormattata = `, ${giorno}/${mese}/${anno}`;
+  
+      const luogoDataInput = document.getElementById('luogo_data');
+      if (luogoDataInput && luogoDataInput.value.trim() === '') {
+        luogoDataInput.value = dataFormattata;
+        luogoDataInput.focus();
+        luogoDataInput.setSelectionRange(0, 0); // Imposta il cursore prima della virgola
+      }
+    });
+  </script>
+  
+  
+    
   </body>
 </html>
