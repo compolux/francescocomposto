@@ -151,61 +151,80 @@ Il Regolamento le riconosce i seguenti diritti.
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script>
-  async function downloadPDF() {
-    const isChecked = document.getElementById("privacyCheck").checked;
-    if (!isChecked) {
-      alert("Devi accettare l'informativa sulla privacy per scaricare il PDF.");
-      return;
-    }
-
-    const nome = document.querySelector('input[placeholder="Inserisci il nome"]').value;
-    const cognome = document.querySelector('input[placeholder="Inserisci il cognome"]').value;
-    const cf = document.querySelector('input[placeholder="Inserisci il Codice Fiscale"]').value;
-    const data = document.querySelector('input[placeholder="Inserisci data"]').value;
-    const luogo = document.querySelector('input[placeholder="Inserisci luogo"]').value;
-    const firmaCanvas = document.getElementById("signature-pad");
-    const firmaUpload = document.getElementById("uploadFirma");
-
-    const formUrl = '/2025_PRIVACY.pdf';
-    const existingPdfBytes = await fetch(formUrl).then(res => res.arrayBuffer());
-
-    const { PDFDocument, StandardFonts, rgb } = PDFLib;
-    const pdfDoc = await PDFDocument.load(existingPdfBytes);
-    const pages = pdfDoc.getPages();
-    const targetPage = pages[2];
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-    const fontSize = 11;
-
-    targetPage.drawText(nome, { x: 210, y: 475, size: fontSize, font });
-    targetPage.drawText(cognome, { x: 400, y: 475, size: fontSize, font });
-    targetPage.drawText(cf, { x: 280, y: 440, size: fontSize, font });
-    targetPage.drawText(data, { x: 130, y: 280, size: fontSize, font });
-    targetPage.drawText(luogo, { x: 210, y: 280, size: fontSize, font });
-
-    const firmaImgData = firmaCanvas.toDataURL("image/png");
-    const firmaBytes = await fetch(firmaImgData).then(res => res.arrayBuffer());
-    const firmaImage = await pdfDoc.embedPng(firmaBytes);
-
-    
-    const firmaDims = firmaImage.scale(0.4);
-
-    targetPage.drawImage(firmaImage, {
-      x: 280,
-      y: 150,
-      width: firmaDims.width,
-      height: firmaDims.height
-    });
-
-    const pdfBytes = await pdfDoc.save();
-
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'Informativa_Privacy_Compilata.pdf';
-    link.click();
-  }
-</script>
+      async function downloadPDF() {
+        const isChecked = document.getElementById("privacyCheck").checked;
+        if (!isChecked) {
+          alert("Devi accettare l'informativa sulla privacy per scaricare il PDF.");
+          return;
+        }
+      
+        const nome = document.querySelector('input[placeholder="Inserisci il nome"]').value;
+        const cognome = document.querySelector('input[placeholder="Inserisci il cognome"]').value;
+        const cf = document.querySelector('input[placeholder="Inserisci il Codice Fiscale"]').value;
+        const data = document.querySelector('input[placeholder="Inserisci data"]').value;
+        const luogo = document.querySelector('input[placeholder="Inserisci luogo"]').value;
+        const firmaCanvas = document.getElementById("signature-pad");
+        const firmaUpload = document.getElementById("uploadFirma");
+      
+        // Controlliamo se la firma è vuota
+        const canvasEmpty = isCanvasEmpty(firmaCanvas);
+        const uploadEmpty = !firmaUpload.files.length;
+      
+        if (canvasEmpty && uploadEmpty) {
+          const proceed = confirm("Inserire firma qui sopra, oppure stampare, firmarlo e scannerizzare il documento da mandare via mail.");
+          if (!proceed) {
+            return;
+          }
+        }
+      
+        const formUrl = '/2025_PRIVACY.pdf';
+        const existingPdfBytes = await fetch(formUrl).then(res => res.arrayBuffer());
+      
+        const { PDFDocument, StandardFonts, rgb } = PDFLib;
+        const pdfDoc = await PDFDocument.load(existingPdfBytes);
+        const pages = pdfDoc.getPages();
+        const targetPage = pages[2];
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      
+        const fontSize = 11;
+      
+        targetPage.drawText(nome, { x: 210, y: 475, size: fontSize, font });
+        targetPage.drawText(cognome, { x: 400, y: 475, size: fontSize, font });
+        targetPage.drawText(cf, { x: 280, y: 440, size: fontSize, font });
+        targetPage.drawText(data, { x: 130, y: 280, size: fontSize, font });
+        targetPage.drawText(luogo, { x: 210, y: 280, size: fontSize, font });
+      
+        const firmaImgData = firmaCanvas.toDataURL("image/png");
+        const firmaBytes = await fetch(firmaImgData).then(res => res.arrayBuffer());
+        const firmaImage = await pdfDoc.embedPng(firmaBytes);
+      
+        const firmaDims = firmaImage.scale(0.4);
+      
+        targetPage.drawImage(firmaImage, {
+          x: 280,
+          y: 150,
+          width: firmaDims.width,
+          height: firmaDims.height
+        });
+      
+        const pdfBytes = await pdfDoc.save();
+      
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'Informativa_Privacy_Compilata.pdf';
+        link.click();
+      }
+      
+      // Funzione di supporto per controllare se il canvas è vuoto
+      function isCanvasEmpty(canvas) {
+        const blank = document.createElement('canvas');
+        blank.width = canvas.width;
+        blank.height = canvas.height;
+        return canvas.toDataURL() === blank.toDataURL();
+      }
+      </script>
+      
 
   
     <script>
