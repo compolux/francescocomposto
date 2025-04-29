@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dichiarazione 2025 - CAF Composto</title>
-    <link rel="stylesheet" href="./main.css" />
-    <style>
-      p {
-        line-height: 2;
-      }
-    </style>
-  </head>
-  <body>
-    <nav>
-      <div class="navbar-logo">
-        <a href="/">caf composto milano</a>
-      </div>
-      <div class="navbar-item">
-        <img style="padding-top: 0.2em; width: 1em" src="./graphics/resources/dot.svg" alt="dot" /><img />
-        <a href="./tariffe.html">tariffe</a>
-        <img style="padding-top: 0.2em; width: 1em" src="./graphics/resources/dot.svg" alt="dot" /><img />
-        <a href="#contact">contatti</a>
-      </div>
-    </nav>
+
+    <head>
+      <meta name="description" content="730 - REDDITI - ISEE - RED - IMU - TASI - 
+      LOCAZIONI - SUCCESSIONI - BADANTI - ANF - MAT">
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" type="text/css" href="./main.css" />
+      <style>
+        p {
+          line-height: 2;
+        }
+      </style>
+      <title>Dichiarazione 2025</title>
+      <link rel="icon" href="./graphics/favicons/16x16.png" sizes="16x16" />
+      <link rel="icon" href="./graphics/favicons/32x32.png" sizes="32x32" />
+      <link rel="icon" href="./graphics/favicons/48x48.png" sizes="48x48" />
+      <link rel="icon" href="./graphics/favicons/64x64.png" sizes="64x64" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      <meta property="og:title" content="francesco composto">
+      <meta property="og:description" content="Servizi CAF">
+      <meta property="og:url" content="https://francesco.composto.eu">
+      <meta property="og:type" content="website">
+      <meta property="og:image" content="#">
+    </head>
+    <body>
+      <nav>
+        <div class="navbar-logo">
+          <a href="/">caf composto milano</a>
+        </div>
+        <div class="navbar-item">
+          <img style="padding-top: 0.2em; width: 1em" src="./graphics/resources/dot.svg" alt="dot" /><img />
+          <a style="padding-right: 1.5em;" href="./tariffe.html">tariffe</a>
+          <img style="padding-top: 0.2em; width: 1em" src="./graphics/resources/dot.svg" alt="dot" /><img />
+          <a href="#contact">contatti</a>
+        </div>
+      </nav>
 
     <section id="dichiarazione2025" style="margin-top: 5rem;">
       <h2>DOCUMENTI PER LA DICHIARAZIONE DEI REDDITI ANNO 2025</h2>
@@ -120,15 +134,42 @@
 
     <footer id="contact">
       <div style="margin-top: 1.5rem;"><h2>CONTATTI</h2></div>
-      <div class="section-box" style="text-align: center; margin-bottom: 0.5rem;">
-        <p>mail: composto.servizicaf [at] gmail {dot} com</p>
-      </div>
-      <div class="section-box" style="text-align: center; margin-bottom: 0.5rem;">
-        <p>mobile: +39 335 61 68 758</p>
-      </div>
+        <div class="section-box" style="text-align: center; margin-bottom: 0.5rem;">
+          <p>✉️ composto.servizicaf [at] gmail {dot} com</p>
+        </div>
+        <div class="section-box" style="text-align: center; margin-bottom: 0.5rem;">
+          <p>📱 +39 335 61 68 758</p>
+        </div>
+        <div class="section-box" style="text-align: center; margin-bottom: 0.5rem;">
+          <p>☎️ +39 02 45 66 834</p>
+        </div>
+        <div class="section-box" style="text-align: center; margin-bottom: 0.5rem;">
+          <p>📍 via Lucca 44 | 20152 | Milano</p>
+        </div>
+        <div class="gallery">
+          <div class="img-box">
+            <div class="img-box">
+              <div id="map" style="height: 190px; width: 100%; filter: grayscale(100%); border: 1px solid #2a2a2a; border-radius: 5px;"></div>
+            </div>                  
+          </div>
+        </div>
     </footer>
     <footer id="footer_logo">
-        <div style="margin-top: 2rem;"><p style="font-size: 0.8rem">twenty25 # Milano</p></div>
-      </footer>
+      <div><p style="font-size: 1.5rem; margin-top: 1.8rem;">Centro Assistenza Fiscale</p></div>
+      <div><p style="font-size: 1.5rem; margin-bottom: 1.6rem;">caf composto milano</p></div>
+    </footer>
+    <script>
+      const map = L.map('map').setView([45.43216, 9.10556], 16);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors &copy; CartoDB',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      L.marker([45.45493856663035, 9.107228521201904]).addTo(map)
+        .bindPopup('Via Lucca 44, 20152 Milano')
+        .openPopup();
+    </script>  
   </body>
 </html>
