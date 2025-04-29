@@ -122,7 +122,7 @@ Il Regolamento le riconosce i seguenti diritti.
         <label>Luogo:</label>
         <input type="text" placeholder="Inserisci luogo" />
         <label>Firma:</label>
-        <canvas id="signature-pad" width="500" height="150" style="border:1px solid #ccc; border-radius:4px;"></canvas>
+        <canvas id="signature-pad" width="500" height="150" style="border:2px solid #2a2a2a; border-radius:4px;"></canvas>
         <div style="margin-top: 1rem;">
           <button class="download-btn" onclick="clearSignature()">Cancella firma</button>
           <label style="display:block; margin-top:0.5rem;"></label>
@@ -171,7 +171,7 @@ Il Regolamento le riconosce i seguenti diritti.
         const uploadEmpty = !firmaUpload.files.length;
       
         if (canvasEmpty && uploadEmpty) {
-          const proceed = confirm("Inserire firma qui sopra, oppure stampare, firmarlo e scannerizzare il documento da mandare via mail.");
+          const proceed = confirm("Inserire firma figitale, oppure stampare, firmare e scannerizzare il modulo da mandare via mail.");
           if (!proceed) {
             return;
           }
