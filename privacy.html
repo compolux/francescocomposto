@@ -198,11 +198,12 @@ Il Regolamento le riconosce i seguenti diritti.
           return;
         }
       
-        const nome = document.querySelector('input[placeholder="Inserisci il nome"]').value;
-        const cognome = document.querySelector('input[placeholder="Inserisci il cognome"]').value;
-        const cf = document.querySelector('input[placeholder="Inserisci il Codice Fiscale"]').value;
-        const data = document.querySelector('input[placeholder="Inserisci data"]').value;
-        const luogo = document.querySelector('input[placeholder="Inserisci luogo"]').value;
+        const nome = document.querySelector('input[placeholder="Inserisci il nome"]').value.toUpperCase();
+        const cognome = document.querySelector('input[placeholder="Inserisci il cognome"]').value.toUpperCase();
+        const cf = document.querySelector('input[placeholder="Inserisci il Codice Fiscale"]').value.toUpperCase();
+        const data = document.querySelector('input[placeholder="Inserisci data"]').value.toUpperCase();
+        const luogo = document.querySelector('input[placeholder="Inserisci luogo"]').value.toUpperCase();
+
         const firmaCanvas = document.getElementById("signature-pad");
         const firmaUpload = document.getElementById("uploadFirma");
       
