@@ -424,7 +424,17 @@
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "Autocertificazione_Compilata.pdf";
+
+    // Prende il campo "Cognome e nome del dichiarante"
+    let nomeCompleto = document.getElementById("nome").value.trim().toLowerCase();
+
+    // Usa solo il primo termine (cognome) se separato da spazio
+    let cognome = nomeCompleto.split(" ")[0] || "utente";
+
+    // Crea il nome file: cognome_autocertificazione.pdf
+    const nomeFile = `${cognome.replace(/\s+/g, "_")}_autocertificazione.pdf`;
+
+    link.download = nomeFile;
     link.click();
   }
   
