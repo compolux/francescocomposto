@@ -375,7 +375,8 @@
   }
   
   async function generatePDF() {
-    const existingPdfBytes = await fetch("./2025_AUTOCERTIFICAZIONE.pdf").then(res => res.arrayBuffer());
+    const pdfUrl = "./2025_AUTOCERTIFICAZIONE.pdf?v=" + Date.now();
+    const existingPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer());
     const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
     const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
     const page = pdfDoc.getPages()[0];
