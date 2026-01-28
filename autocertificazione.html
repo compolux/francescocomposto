@@ -373,6 +373,19 @@
       reader.readAsDataURL(file);
     }
   }
+
+  function drawAdaptiveText(page, font, text, x, y, maxWidth, startSize = 8, minSize = 5) {
+    const t = (text || '');
+    let size = startSize;
+
+    // Riduce il font finché il testo sta dentro maxWidth
+    while (size > minSize && font.widthOfTextAtSize(t, size) > maxWidth) {
+      size -= 0.5;
+    }
+
+    page.drawText(t, { x, y, size, font });
+}
+
   
   async function generatePDF() {
     const pdfUrl = "./2025_AUTOCERTIFICAZIONE.pdf?v=" + Date.now();
@@ -383,8 +396,12 @@
   
     const drawMain = (text, x, y) => page.drawText(text || '', { x, y, size: 8, font });
     const drawTable = (text, x, y) => page.drawText(text || '', { x, y, size: 6, font });
-  
-    drawMain((document.getElementById("nome").value || '').toUpperCase(), 150, 710);
+    
+    const nomeDichiarante = (document.getElementById("nome").value || '').toUpperCase();
+    drawAdaptiveText(page, font, nomeDichiarante, 150, 710, 230, 8, 5);
+
+
+    //drawMain((document.getElementById("nome").value || '').toUpperCase(), 150, 710);
     drawMain((document.getElementById("cittadinanza").value || '').toUpperCase(), 410, 710);
     drawMain((document.getElementById("luogo_nascita").value || '').toUpperCase(), 110, 687);
     drawMain(formatDateIT(document.getElementById("data_nascita").value), 350, 687);
